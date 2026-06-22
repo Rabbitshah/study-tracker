@@ -56,6 +56,8 @@ export default function SubjectCard({ log, onLog, date }) {
     <div className="card" style={{
       borderLeft: `4px solid ${color}`,
       transition: 'box-shadow 0.2s',
+      opacity: log.day_ended ? 0.4 : 1,
+      pointerEvents: log.day_ended ? 'none' : 'auto',
     }}>
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>

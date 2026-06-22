@@ -59,9 +59,15 @@ export default function Today() {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-        {logs.map(log => (
-          <SubjectCard key={log.subject_id} log={log} date={today} />
-        ))}
+        {!isLoading && logs.length === 0 ? (
+          <div style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '40px 20px', fontSize: 14 }}>
+            No active subjects. Go to Settings to enable some.
+          </div>
+        ) : (
+          logs.map(log => (
+            <SubjectCard key={log.subject_id} log={log} date={today} />
+          ))
+        )}
       </div>
 
       {/* Bottom summary bar */}

@@ -56,8 +56,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ─────────────────────────────────────────
    Scrollbar
@@ -219,4 +217,24 @@ input:focus, select:focus, textarea:focus {
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
+.skeleton {
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: var(--color-surface-3);
+  border-radius: 8px;
+}
+
+.fab-button {
+  bottom: 130px;
+}
+
+@media (min-width: 768px) {
+  .fab-button {
+    bottom: 24px;
+  }
 }

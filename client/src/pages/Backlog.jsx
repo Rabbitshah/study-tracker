@@ -66,7 +66,12 @@ export default function Backlog() {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {backlogItems.map(item => {
+        {!isLoading && totalMinutes === 0 ? (
+          <div style={{ color: '#22c55e', textAlign: 'center', padding: '40px 20px', fontSize: 15, fontWeight: 600 }}>
+            You're all caught up 🎉
+          </div>
+        ) : (
+          backlogItems.map(item => {
           const minutes = parseInt(item.accumulated_minutes);
           const color = backlogColor(minutes);
           const isConfirming = confirmClear === item.subject_id;
@@ -139,7 +144,8 @@ export default function Backlog() {
               )}
             </div>
           );
-        })}
+        })
+      )}
       </div>
     </div>
   );

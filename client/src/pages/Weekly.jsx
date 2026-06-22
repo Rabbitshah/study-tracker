@@ -111,74 +111,82 @@ export default function Weekly() {
       )}
 
       {/* 7-day grid */}
-      <div className="card" style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
-          Completion Grid
+      {!isLoading && weeklyData.length === 0 ? (
+        <div style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '60px 20px', fontSize: 14 }}>
+          No logs yet. Start tracking today.
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {days.map(day => (
-            <DayCell key={day} dayStr={day} dayLogs={byDate[day] || []} />
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 11, color: 'var(--color-muted)' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} /> 100%+
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} /> 50–99%
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} /> &lt;50%
-          </span>
-        </div>
-      </div>
-
-      {/* Bar chart */}
-      <div className="card" style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
-          Hours Studied Per Day
-        </div>
-        <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={chartData} barGap={2}>
-            <XAxis dataKey="day" tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} unit="h" width={28} />
-            <Tooltip
-              contentStyle={{ background: '#1c1c28', border: '1px solid #2a2a3d', borderRadius: 8, fontSize: 12 }}
-              labelStyle={{ color: '#f0f0f8' }}
-            />
-            {subjectNames.map(name => (
-              <Bar key={name} dataKey={name} fill={SUBJECT_COLORS[name] || '#6366f1'} radius={[4, 4, 0, 0]} maxBarSize={20} />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Weekly totals table */}
-      <div className="card">
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
-          This Week's Summary
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {overview.map(s => (
-            <div key={s.subject_id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.subject_color, flexShrink: 0 }} />
-              <span style={{ flex: 1, fontSize: 14, fontWeight: 500 }}>{s.subject_name}</span>
-              <span style={{ fontSize: 13, color: 'var(--color-muted)' }}>
-                {formatMinutes(parseInt(s.total_completed_this_week))} / {formatMinutes(parseInt(s.total_planned_this_week))}
+      ) : (
+        <>
+          <div className="card" style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
+              Completion Grid
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              {days.map(day => (
+                <DayCell key={day} dayStr={day} dayLogs={byDate[day] || []} />
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 11, color: 'var(--color-muted)' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} /> 100%+
               </span>
-              <span style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: s.completion_pct >= 100 ? '#22c55e' : s.completion_pct >= 50 ? '#f59e0b' : '#ef4444',
-                minWidth: 36,
-                textAlign: 'right',
-              }}>
-                {s.completion_pct}%
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} /> 50–99%
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} /> &lt;50%
               </span>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          {/* Bar chart */}
+          <div className="card" style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
+              Hours Studied Per Day
+            </div>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={chartData} barGap={2}>
+                <XAxis dataKey="day" tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} unit="h" width={28} />
+                <Tooltip
+                  contentStyle={{ background: '#1c1c28', border: '1px solid #2a2a3d', borderRadius: 8, fontSize: 12 }}
+                  labelStyle={{ color: '#f0f0f8' }}
+                />
+                {subjectNames.map(name => (
+                  <Bar key={name} dataKey={name} fill={SUBJECT_COLORS[name] || '#6366f1'} radius={[4, 4, 0, 0]} maxBarSize={20} />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Weekly totals table */}
+          <div className="card">
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: 'var(--color-text-2)' }}>
+              This Week's Summary
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {overview.map(s => (
+                <div key={s.subject_id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.subject_color, flexShrink: 0 }} />
+                  <span style={{ flex: 1, fontSize: 14, fontWeight: 500 }}>{s.subject_name}</span>
+                  <span style={{ fontSize: 13, color: 'var(--color-muted)' }}>
+                    {formatMinutes(parseInt(s.total_completed_this_week))} / {formatMinutes(parseInt(s.total_planned_this_week))}
+                  </span>
+                  <span style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: s.completion_pct >= 100 ? '#22c55e' : s.completion_pct >= 50 ? '#f59e0b' : '#ef4444',
+                    minWidth: 36,
+                    textAlign: 'right',
+                  }}>
+                    {s.completion_pct}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

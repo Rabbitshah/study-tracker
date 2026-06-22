@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import { useAuth } from './hooks/useAuth';
+import toast, { Toaster } from 'react-hot-toast';
 
 import Login from './screens/Login';
 import Register from './screens/Register';
@@ -14,6 +15,18 @@ import NavBar from './components/NavBar';
 import QuickLogButton from './components/QuickLogButton';
 
 const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (err) => {
+      const msg = err.response?.data?.error || err.response?.data?.message || 'Failed to load';
+      toast.error(msg);
+    }
+  }),
+  mutationCache: new MutationCache({
+    onError: (err) => {
+      const msg = err.response?.data?.error || err.response?.data?.message || 'Request failed';
+      toast.error(msg);
+    }
+  }),
   defaultOptions: {
     queries: {
       staleTime: 30000,
@@ -58,6 +71,17 @@ function ProtectedLayout() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1c1c28',
+            color: '#f0f0f8',
+            border: '1px solid #2a2a3d',
+            fontSize: '14px',
+          },
+        }}
+      />
       <BrowserRouter>
         <Routes>
           {/* Public */}

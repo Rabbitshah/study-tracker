@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { statusColor } from '../utils/backlogCalc';
@@ -6,6 +7,36 @@ function CourseRow({ course, isLocked, onComplete }) {
   const pct = course.total_hours > 0
     ? Math.round((course.completed_hours / course.total_hours) * 100)
     : 0;
+
+  const queryClient = useQueryClient();
+  const [val, setVal] = useState(course.completed_hours);
+  const [error, setError] = useState('');
+
+  // Sync state if course updates externally
+  useEffect(() => {
+    setVal(course.completed_hours);
+    setError('');
+  }, [course.completed_hours]);
+
+  const updateMutation = useMutation({
+    mutationFn: (hours) =>
+      api.patch(`/courses/${course.id}`, { completed_hours: hours }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      setError('');
+    },
+  });
+
+  function handleSave() {
+    if (isLocked || course.completed) return;
+    const num = parseFloat(val);
+    if (isNaN(num) || num < 0 || num > parseFloat(course.total_hours)) {
+      setError(`Must be between 0 and ${course.total_hours}`);
+      return;
+    }
+    setError('');
+    updateMutation.mutate(num);
+  }
 
   return (
     <div className="card-2" style={{ opacity: isLocked ? 0.5 : 1 }}>
@@ -31,8 +62,38 @@ function CourseRow({ course, isLocked, onComplete }) {
             />
           </div>
 
-          <div style={{ fontSize: 12, color: 'var(--color-muted)' }}>
-            {parseFloat(course.completed_hours).toFixed(1)}h / {parseFloat(course.total_hours).toFixed(0)}h
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--color-muted)', marginTop: 4 }}>
+            {!isLocked && !course.completed ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max={course.total_hours}
+                    value={val}
+                    onChange={e => setVal(e.target.value)}
+                    onBlur={handleSave}
+                    onKeyDown={e => e.key === 'Enter' && handleSave()}
+                    style={{
+                      width: 70,
+                      height: 28,
+                      padding: '2px 8px',
+                      fontSize: 13,
+                      background: 'var(--color-surface-3)',
+                      border: error ? '1px solid var(--color-danger)' : '1px solid var(--color-border)',
+                      borderRadius: 6,
+                    }}
+                  />
+                  <span>h done of {parseFloat(course.total_hours).toFixed(0)}h</span>
+                </div>
+                {error && <span style={{ color: 'var(--color-danger)', fontSize: 11 }}>{error}</span>}
+              </div>
+            ) : (
+              <span>
+                {parseFloat(course.completed_hours).toFixed(1)}h / {parseFloat(course.total_hours).toFixed(0)}h
+              </span>
+            )}
           </div>
         </div>
 
@@ -127,7 +188,11 @@ export default function Courses() {
       </p>
 
       {isLoading && (
-        <div style={{ color: 'var(--color-muted)', textAlign: 'center', padding: 40 }}>Loading...</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {[1, 2].map(n => (
+            <div key={n} className="card skeleton" style={{ height: 240, width: '100%' }} />
+          ))}
+        </div>
       )}
 
       {data && (

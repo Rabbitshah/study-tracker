@@ -45,12 +45,12 @@ export default function QuickLogButton() {
       {/* FAB */}
       <motion.button
         id="quick-log-fab"
+        className="fab-button"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(true)}
         style={{
           position: 'fixed',
-          bottom: 80,
           right: 20,
           zIndex: 50,
           width: 56,

@@ -14,7 +14,7 @@ export function useAuth() {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
-    if (!accessToken || !refreshToken) {
+    if (!refreshToken) {
       setLoading(false);
       return;
     }
