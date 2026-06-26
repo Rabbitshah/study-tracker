@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Study Tracker - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Syne:wght@600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#869397",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-bright": "#393841",
+                        "on-secondary": "#3c0091",
+                        "primary-fixed-dim": "#4cd7f6",
+                        "surface-container": "#1f1f27",
+                        "surface-tint": "#4cd7f6",
+                        "inverse-surface": "#e4e1ec",
+                        "inverse-on-surface": "#303038",
+                        "on-tertiary-container": "#563400",
+                        "on-secondary-fixed": "#23005c",
+                        "on-primary-fixed": "#001f26",
+                        "on-surface": "#e4e1ec",
+                        "on-primary": "#003640",
+                        "on-secondary-container": "#c4abff",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#2a1700",
+                        "error-container": "#93000a",
+                        "on-background": "#e4e1ec",
+                        "surface-variant": "#34343c",
+                        "primary-fixed": "#acedff",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1b1b23",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "secondary-container": "#571bc1",
+                        "primary": "#4cd7f6",
+                        "secondary": "#d0bcff",
+                        "outline-variant": "#3d494c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#472a00",
+                        "surface-dim": "#13131a",
+                        "on-primary-fixed-variant": "#004e5c",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-primary": "#00687a",
+                        "primary-container": "#06b6d4",
+                        "surface-container-lowest": "#0e0d15",
+                        "tertiary": "#ffb95f",
+                        "on-surface-variant": "#bcc9cd",
+                        "secondary-fixed": "#e9ddff",
+                        "on-primary-container": "#00424f",
+                        "surface": "#13131a",
+                        "surface-container-highest": "#34343c",
+                        "background": "#08080F",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-high": "#2a2931",
+                        "tertiary-container": "#e79400",
+                        "secondary-fixed-dim": "#d0bcff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "xl": "32px",
+                        "container-margin": "24px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Syne"],
+                        "display": ["Syne"],
+                        "label-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Syne"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Syne"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["28px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #08080F;
+            overflow-x: hidden;
+        }
+
+        .bg-radial-glow {
+            background: radial-gradient(circle at center, rgba(76, 215, 246, 0.15) 0%, rgba(208, 188, 255, 0.05) 50%, transparent 70%);
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            border-color: #4cd7f6;
+        }
+
+        .primary-gradient {
+            background: linear-gradient(135deg, #4cd7f6 0%, #d0bcff 100%);
+        }
+
+        .logo-gradient {
+            background: linear-gradient(135deg, rgba(76, 215, 246, 0.2) 0%, rgba(208, 188, 255, 0.2) 100%);
+        }
+
+        .card-cyan-glow {
+            box-shadow: 0 10px 40px -10px rgba(6, 182, 212, 0.15);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background min-h-screen flex items-center justify-center p-md">
+<!-- Atmospheric Background Overlay -->
+<div class="fixed inset-0 z-0 bg-radial-glow pointer-events-none"></div>
+<main class="relative z-10 w-full max-w-[440px] flex flex-col items-center">
+<!-- Header Section -->
+<div class="mb-lg flex flex-col items-center text-center">
+<!-- Center logo: 📚 in cyan-violet gradient rounded square (60px) -->
+<div class="w-[60px] h-[60px] logo-gradient border border-primary/30 rounded-xl flex items-center justify-center mb-md card-cyan-glow">
+<span class="text-[32px]">📚</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-xs">Study Tracker</h1>
+<p class="font-body-md text-on-surface-variant">Track your GRE and courses in one place</p>
+</div>
+<!-- Auth Card -->
+<!-- Card: Surface background (#0F0F1A), 16px radius, 1px border (#1E1E35), subtle cyan glow shadow -->
+<div class="w-full bg-[#0F0F1A] border border-[#1E1E35] rounded-xl p-xl card-cyan-glow mb-lg">
+<form action="#" class="space-y-lg" onsubmit="return false">
+<!-- Email Field -->
+<div class="space-y-sm">
+<label class="block font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-3 pl-11 pr-md text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-0 input-glow transition-all duration-300" id="email" name="email" placeholder="name@university.edu" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-sm">
+<div class="flex justify-between items-center">
+<label class="block font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider" for="password">Password</label>
+<a class="font-label-caps text-primary hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-3 pl-11 pr-md text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-0 input-glow transition-all duration-300" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me & Login -->
+<div class="pt-sm space-y-md">
+<label class="flex items-center gap-sm cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer h-5 w-5 rounded border-outline-variant/30 bg-surface-container-lowest text-primary-container focus:ring-primary focus:ring-offset-0 focus:ring-offset-transparent" type="checkbox"/>
+</div>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Remember my session</span>
+</label>
+<!-- Button: "Sign In" with cyan-violet gradient, 12px radius -->
+<button class="w-full h-[52px] primary-gradient text-on-primary-fixed font-headline-md text-body-lg rounded-xl font-bold shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] active:scale-[0.98] transition-all duration-200">
+                        Sign In
+                    </button>
+</div>
+</form>
+<!-- Social Login Divider -->
+<div class="mt-xl flex items-center gap-md">
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+<span class="font-label-caps text-outline/40">OR CONTINUE WITH</span>
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+</div>
+<div class="mt-lg grid grid-cols-2 gap-md">
+<button class="flex items-center justify-center gap-sm bg-surface-container-low border border-outline-variant/20 rounded-lg py-sm hover:bg-surface-variant/40 transition-colors">
+<img class="w-5 h-5" data-alt="Official high-quality logo of Google for a modern minimalist dark mode login interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8n423TsTaII2O1ks-FhBWm0hWZwq7Px5HKYWYEfPSCahNtMawXvZTLZlq8vlzxHtb00phkvWOteVXusBwDjijs2RTMnGVuRpaB0ag1vUMPIN60sgD2P8-HBj_hRmGHCNF5RMH7krfjbpC5oKUQkh22xRdPhzlehplTqSyHuUj3TFxR775Jl6HUkUXQTz3jgjG1o8OmbyUBC8GLrra6Q9B-iF19DINzHVtyZnbxWRbDa1UjjUTATRGpseqOoPnHMaH3aDckTi3mgB7"/>
+<span class="font-label-mono text-label-mono">Google</span>
+</button>
+<button class="flex items-center justify-center gap-sm bg-surface-container-low border border-outline-variant/20 rounded-lg py-sm hover:bg-surface-variant/40 transition-colors">
+<img class="w-5 h-5" data-alt="Official high-quality logo of GitHub for a tech-focused modern dark mode developer environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE39j2byl3pFXvWD1jTmgPzt6UoDKEfUMYYSYHtyyN1c1kFhKJAy2UaXwvgFpzLrsR_n6Khen02vOJOyMmHinSxMBR1QrfbIUQCtH40wMjXGDFk1AT4BVMcAEJZGm_2p9l51mVMCtySeIsY3B5QD22pBdgUKXKD7lSDoNOIgbsM7FMkhYIudwyiIc1gTCZY2_6dH-_9z0HCL4-n0SALs11buQKaUbMfsRWqRqUl6ZYgS1YvEmzrNlQNmgUVgl-KjOAiiQXAeVrjHtI"/>
+<span class="font-label-mono text-label-mono">GitHub</span>
+</button>
+</div>
+</div>
+<!-- Footer Link -->
+<p class="font-body-md text-on-surface-variant">
+            Don't have an account? 
+            <a class="text-primary font-bold hover:underline ml-xs" href="#">Register</a>
+</p>
+<!-- Dynamic Glow micro-interaction logic -->
+<script>
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.parentElement.classList.add('active-focus');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.parentElement.classList.remove('active-focus');
+                });
+            });
+        </script>
+</main>
+<!-- Visual Accents (Atmospheric) -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 translate-x-1/2 -translate-y-1/2"></div>
+<div class="fixed bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] -z-10 -translate-x-1/2 translate-y-1/2"></div>
+</body></html>

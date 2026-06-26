@@ -52,23 +52,41 @@ export default function SubjectCard({ log, onLog, date }) {
   const pct = planned > 0 ? Math.min(100, Math.round((completed / planned) * 100)) : 0;
   const color = log.subject_color;
 
+  const pctColor = pct >= 100 ? 'var(--success)' : pct >= 50 ? 'var(--tertiary)' : 'var(--on-surface-variant)';
+
   return (
-    <div className="card" style={{
-      borderLeft: `4px solid ${color}`,
-      transition: 'box-shadow 0.2s',
-      opacity: log.day_ended ? 0.4 : 1,
-      pointerEvents: log.day_ended ? 'none' : 'auto',
-    }}>
+    <div
+      className="luminous-card"
+      style={{
+        borderLeft: `3px solid ${color}`,
+        padding: '20px 20px 20px 18px',
+        opacity: log.day_ended ? 0.45 : 1,
+        pointerEvents: log.day_ended ? 'none' : 'auto',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Subtle color tint */}
+      <div style={{
+        position: 'absolute', top: 0, right: 0, bottom: 0,
+        width: '60%',
+        background: `linear-gradient(to left, ${color}06, transparent)`,
+        pointerEvents: 'none',
+      }} />
+
       {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            width: 10, height: 10,
+            width: 8, height: 8,
             borderRadius: '50%',
             background: color,
-            boxShadow: `0 0 8px ${color}88`,
+            boxShadow: `0 0 10px ${color}99`,
+            flexShrink: 0,
           }} />
-          <span style={{ fontWeight: 600, fontSize: 15 }}>{log.subject_name}</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: 'var(--on-surface)' }}>
+            {log.subject_name}
+          </span>
         </div>
 
         {/* Backlog badge */}
@@ -80,27 +98,28 @@ export default function SubjectCard({ log, onLog, date }) {
       </div>
 
       {/* Progress */}
-      <div style={{ marginBottom: 10 }}>
+      <div style={{ marginBottom: 16, position: 'relative' }}>
         <ProgressBar completed={completed} planned={planned} color={color} />
         <div style={{
           display: 'flex', justifyContent: 'space-between',
-          marginTop: 6, fontSize: 13, color: 'var(--color-text-2)'
+          marginTop: 8, fontSize: 12, fontFamily: 'var(--font-mono)',
         }}>
-          <span>{formatMinutes(completed)} done</span>
-          <span style={{ fontWeight: 600, color: pct >= 100 ? '#22c55e' : 'var(--color-text)' }}>
-            {pct}% · {formatMinutes(planned)} target
+          <span style={{ color: 'var(--on-surface-variant)' }}>{formatMinutes(completed)} done</span>
+          <span style={{ fontWeight: 700, color: pctColor }}>
+            {pct}%
             {log.backlog_carry > 0 && (
-              <span style={{ color: '#fca5a5', fontSize: 11 }}>
-                {' '}(+{formatMinutes(log.backlog_carry)} carry)
+              <span style={{ color: 'var(--error)', fontWeight: 500, marginLeft: 4 }}>
+                (+{formatMinutes(log.backlog_carry)} carry)
               </span>
             )}
           </span>
+          <span style={{ color: 'var(--on-surface-variant)' }}>{formatMinutes(planned)} target</span>
         </div>
       </div>
 
       {/* Quick log buttons */}
       {!log.day_ended && (
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', position: 'relative' }}>
           {[15, 30, 45, 60].map(min => (
             <button
               key={min}
@@ -108,27 +127,27 @@ export default function SubjectCard({ log, onLog, date }) {
               className="btn btn-ghost"
               onClick={() => handleLog(min)}
               disabled={logging || mutation.isPending}
-              style={{ minWidth: 54, fontSize: 13, padding: '8px 12px' }}
+              style={{ minWidth: 50, fontSize: 12, padding: '7px 12px' }}
             >
-              +{min}
+              +{min}m
             </button>
           ))}
 
-          <div style={{ display: 'flex', gap: 6, flex: 1, minWidth: 120 }}>
+          <div style={{ display: 'flex', gap: 6, flex: 1, minWidth: 110 }}>
             <input
               type="number"
-              placeholder="custom"
+              placeholder="min"
               min="1"
               value={customMinutes}
               onChange={e => setCustomMinutes(e.target.value)}
-              style={{ flex: 1, minWidth: 70, padding: '8px 10px', fontSize: 14 }}
+              style={{ flex: 1, minWidth: 60, padding: '8px 10px', fontSize: 13 }}
               onKeyDown={e => e.key === 'Enter' && handleLog(customMinutes)}
             />
             <button
               className="btn btn-primary"
               onClick={() => handleLog(customMinutes)}
               disabled={!customMinutes || logging || mutation.isPending}
-              style={{ padding: '8px 14px', fontSize: 13, whiteSpace: 'nowrap' }}
+              style={{ padding: '8px 14px', fontSize: 12, whiteSpace: 'nowrap' }}
             >
               Log
             </button>
@@ -137,8 +156,13 @@ export default function SubjectCard({ log, onLog, date }) {
       )}
 
       {log.day_ended && (
-        <div style={{ fontSize: 13, color: 'var(--color-muted)', marginTop: 4 }}>
-          Day ended ✓
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          fontSize: 12, color: 'var(--success)',
+          fontFamily: 'var(--font-mono)', marginTop: 4,
+        }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 16 }}>check_circle</span>
+          Day ended
         </div>
       )}
     </div>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Word List | Study Tracker GRE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Syne:wght@600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #08080F;
+            color: #e4e1ec;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-sidebar {
+            background: rgba(31, 31, 39, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gradient-text-primary {
+            background: linear-gradient(135deg, #4cd7f6 0%, #d0bcff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glow-dot {
+            box-shadow: 0 0 10px #4cd7f6, 0 0 20px rgba(76, 215, 246, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #08080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #34343c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4cd7f6;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            border-color: #2A2A48;
+            box-shadow: 0 10px 30px -10px rgba(76, 215, 246, 0.15);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#869397",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-bright": "#393841",
+                        "on-secondary": "#3c0091",
+                        "primary-fixed-dim": "#4cd7f6",
+                        "surface-container": "#1f1f27",
+                        "surface-tint": "#4cd7f6",
+                        "inverse-surface": "#e4e1ec",
+                        "inverse-on-surface": "#303038",
+                        "on-tertiary-container": "#563400",
+                        "on-secondary-fixed": "#23005c",
+                        "on-primary-fixed": "#001f26",
+                        "on-surface": "#e4e1ec",
+                        "on-primary": "#003640",
+                        "on-secondary-container": "#c4abff",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#2a1700",
+                        "error-container": "#93000a",
+                        "on-background": "#e4e1ec",
+                        "surface-variant": "#34343c",
+                        "primary-fixed": "#acedff",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1b1b23",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "secondary-container": "#571bc1",
+                        "primary": "#4cd7f6",
+                        "secondary": "#d0bcff",
+                        "outline-variant": "#3d494c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#472a00",
+                        "surface-dim": "#13131a",
+                        "on-primary-fixed-variant": "#004e5c",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-primary": "#00687a",
+                        "primary-container": "#06b6d4",
+                        "surface-container-lowest": "#0e0d15",
+                        "tertiary": "#ffb95f",
+                        "on-surface-variant": "#bcc9cd",
+                        "secondary-fixed": "#e9ddff",
+                        "on-primary-container": "#00424f",
+                        "surface": "#13131a",
+                        "surface-container-highest": "#34343c",
+                        "background": "#13131a",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-high": "#2a2931",
+                        "tertiary-container": "#e79400",
+                        "secondary-fixed-dim": "#d0bcff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "xl": "32px",
+                        "container-margin": "24px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Syne"],
+                        "display": ["Syne"],
+                        "label-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Syne"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Syne"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex min-h-screen">
+<!-- Left Main Sidebar (Shared Component Identity) -->
+<aside class="fixed left-0 top-0 h-screen w-[240px] bg-surface-container/80 backdrop-blur-xl border-r border-primary/20 shadow-xl z-50 flex flex-col py-lg">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Study Tracker</h1>
+<p class="font-label-mono text-label-mono text-on-surface-variant">Premium GRE Prep</p>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-1">
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">today</span> Today</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">calendar_view_week</span> Weekly</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">inventory_2</span> Backlog</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">school</span> Courses</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">menu_book</span> GRE</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary border-l-4 border-primary" href="#"><span class="material-symbols-outlined">font_download</span> Word List</a></li>
+<li><a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors duration-200" href="#"><span class="material-symbols-outlined">settings</span> Settings</a></li>
+</ul>
+</nav>
+<div class="mt-auto px-lg">
+<button class="flex items-center gap-3 w-full py-3 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">logout</span> Sign Out
+            </button>
+</div>
+</aside>
+<!-- Content Area -->
+<div class="ml-[240px] flex-grow flex flex-col min-h-screen">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 w-full bg-surface/50 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-lg py-sm">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md text-primary font-bold">Word List</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary outline-none transition-all w-[300px]" placeholder="Search dictionary..." type="text"/>
+</div>
+<div class="flex gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+<button class="bg-primary/10 text-primary px-lg py-sm rounded-lg font-label-mono text-label-mono hover:bg-primary/20 transition-all">End Day</button>
+</div>
+</header>
+<main class="flex flex-grow relative">
+<!-- Sub-sidebar (Fixed) -->
+<aside class="w-[200px] flex-shrink-0 border-r border-outline-variant/20 bg-surface-container-lowest h-[calc(100vh-64px)] overflow-y-auto sticky top-16 px-md py-lg">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-md px-sm">GRE Groups</h3>
+<ul class="space-y-1">
+<!-- Group List Generation -->
+<li class="bg-primary/10 border-r-2 border-primary">
+<a class="flex justify-between items-center px-sm py-2 text-primary font-label-mono text-sm" href="#">
+<span>Group 1</span>
+<span class="bg-primary/20 text-[10px] px-1.5 py-0.5 rounded">30</span>
+</a>
+</li>
+<!-- Generate additional mock groups -->
+<script>
+                        for(let i=2; i<=32; i++) {
+                            document.write(`
+                                <li class="hover:bg-surface-variant/30 group transition-all">
+                                    <a href="#" class="flex justify-between items-center px-sm py-2 text-on-surface-variant group-hover:text-on-surface font-label-mono text-sm">
+                                        <span>Group ${i}</span>
+                                        <span class="bg-surface-variant text-[10px] px-1.5 py-0.5 rounded">30</span>
+                                    </a>
+                                </li>
+                            `);
+                        }
+                    </script>
+</ul>
+</aside>
+<!-- Scrollable Content Area -->
+<div class="flex-grow p-xl overflow-y-auto">
+<!-- Header & Overall Progress -->
+<div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-lg">
+<div>
+<h2 class="font-display text-display gradient-text-primary mb-sm">GRE Vocabulary</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                            Mastering the high-frequency word clusters. Focused deep-learning for GRE Verbal excellence.
+                        </p>
+</div>
+<div class="bg-surface-container p-lg rounded-xl border border-outline-variant/30 min-w-[320px]">
+<div class="flex justify-between items-center mb-sm">
+<span class="font-label-mono text-label-mono text-primary">Mastery Progress</span>
+<span class="font-label-mono text-label-mono text-on-surface">27% <span class="text-on-surface-variant ml-1">(262/960)</span></span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full relative overflow-hidden">
+<div class="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-secondary w-[27%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Filters Bar -->
+<div class="flex flex-wrap items-center gap-md mb-xl">
+<div class="flex-grow max-w-md relative">
+<input class="w-full bg-surface-container border border-outline-variant/30 focus:border-primary rounded-lg px-lg py-3 outline-none transition-all" placeholder="Filter current group..." type="text"/>
+</div>
+<div class="flex gap-md">
+<select class="bg-surface-container border border-outline-variant/30 text-on-surface-variant rounded-lg px-md py-3 outline-none focus:border-primary appearance-none min-w-[120px]">
+<option>All POS</option>
+<option>Noun</option>
+<option>Verb</option>
+<option>Adjective</option>
+</select>
+<select class="bg-surface-container border border-outline-variant/30 text-on-surface-variant rounded-lg px-md py-3 outline-none focus:border-primary appearance-none min-w-[120px]">
+<option>All Status</option>
+<option>Learned</option>
+<option>Learning</option>
+<option>Mastered</option>
+</select>
+<button class="bg-surface-variant/50 p-3 rounded-lg hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+<!-- Word Grid -->
+<div class="word-grid">
+<!-- Word Card 1 (Expanded) -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-xl p-lg flex flex-col gap-md transition-all card-hover ring-1 ring-primary/30">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs" style="font-family: 'Syne', serif;">Loquacious</h3>
+<span class="font-label-mono text-label-mono text-primary bg-primary/10 px-2 py-0.5 rounded">ADJECTIVE</span>
+</div>
+<button class="text-emerald-400 bg-emerald-400/10 p-2 rounded-lg flex items-center gap-2 font-label-mono text-xs">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Learned
+                            </button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Tending to talk a great deal; extremely talkative.</p>
+<div class="space-y-md border-t border-outline-variant/20 pt-md mt-sm">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-sm">Synonyms</span>
+<div class="flex flex-wrap gap-2">
+<span class="bg-emerald-400/10 text-emerald-400 font-label-mono text-xs px-2 py-1 rounded">garrulous</span>
+<span class="bg-emerald-400/10 text-emerald-400 font-label-mono text-xs px-2 py-1 rounded">voluble</span>
+<span class="bg-emerald-400/10 text-emerald-400 font-label-mono text-xs px-2 py-1 rounded">verbose</span>
+</div>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-sm">Antonyms</span>
+<div class="flex flex-wrap gap-2">
+<span class="bg-error/10 text-error font-label-mono text-xs px-2 py-1 rounded">reticent</span>
+<span class="bg-error/10 text-error font-label-mono text-xs px-2 py-1 rounded">taciturn</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border-l-4 border-secondary p-md rounded-r-lg">
+<span class="font-label-caps text-label-caps text-secondary uppercase block mb-xs">GRE Context</span>
+<p class="text-sm italic text-on-surface-variant">"The loquacious host was known for monopolizing the conversation at every academic seminar."</p>
+</div>
+</div>
+<div class="mt-auto pt-md flex justify-between items-center">
+<span class="font-label-mono text-xs text-on-surface-variant">Last reviewed: 2 days ago</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">expand_less</span>
+</button>
+</div>
+</div>
+<!-- Word Card 2 (Collapsed) -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-xl p-lg flex flex-col gap-md transition-all card-hover h-fit">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs" style="font-family: 'Syne', serif;">Laconic</h3>
+<span class="font-label-mono text-label-mono text-primary bg-primary/10 px-2 py-0.5 rounded">ADJECTIVE</span>
+</div>
+<button class="text-on-surface-variant hover:text-emerald-400 border border-outline-variant/30 p-2 rounded-lg flex items-center gap-2 font-label-mono text-xs">
+<span class="material-symbols-outlined text-sm">radio_button_unchecked</span> Mark Learned
+                            </button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Using very few words; concise to the point of seeming rude.</p>
+<div class="mt-auto pt-md flex justify-between items-center">
+<span class="font-label-mono text-xs text-on-surface-variant">Not started</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Additional Mock Cards -->
+<script>
+                        const words = [
+                            {name: "Ephemeral", pos: "ADJECTIVE", def: "Lasting for a very short time.", learned: true},
+                            {name: "Pragmatic", pos: "ADJECTIVE", def: "Dealing with things sensibly and realistically in a way that is based on practical considerations.", learned: false},
+                            {name: "Capricious", pos: "ADJECTIVE", def: "Given to sudden and unaccountable changes of mood or behavior.", learned: true},
+                            {name: "Mitigate", pos: "VERB", def: "Make less severe, serious, or painful.", learned: false},
+                            {name: "Audacious", pos: "ADJECTIVE", def: "Showing a willingness to take surprisingly bold risks.", learned: false},
+                            {name: "Enervate", pos: "VERB", def: "Cause someone to feel drained of energy or vitality; weaken.", learned: false}
+                        ];
+
+                        words.forEach(word => {
+                            document.write(`
+                                <div class="bg-surface-container border border-outline-variant/30 rounded-xl p-lg flex flex-col gap-md transition-all card-hover h-fit">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-headline-md text-headline-md text-on-surface mb-xs" style="font-family: 'Syne', serif;">${word.name}</h3>
+                                            <span class="font-label-mono text-label-mono text-primary bg-primary/10 px-2 py-0.5 rounded">${word.pos}</span>
+                                        </div>
+                                        ${word.learned ? 
+                                            `<button class="text-emerald-400 bg-emerald-400/10 p-2 rounded-lg flex items-center gap-2 font-label-mono text-xs"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Learned</button>` :
+                                            `<button class="text-on-surface-variant hover:text-emerald-400 border border-outline-variant/30 p-2 rounded-lg flex items-center gap-2 font-label-mono text-xs"><span class="material-symbols-outlined text-sm">radio_button_unchecked</span> Mark Learned</button>`
+                                        }
+                                    </div>
+                                    <p class="font-body-md text-body-md text-on-surface-variant">${word.def}</p>
+                                    <div class="mt-auto pt-md flex justify-between items-center">
+                                        <span class="font-label-mono text-xs text-on-surface-variant">${word.learned ? 'Review scheduled' : 'New word'}</span>
+                                        <button class="text-on-surface-variant hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined">expand_more</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+</div>
+<!-- FAB Back to Top -->
+<button class="fixed bottom-lg right-lg w-14 h-14 bg-primary text-on-primary-container rounded-full shadow-lg shadow-primary/30 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        // Smooth scroll to top for FAB
+        document.querySelector('.fixed.bottom-lg').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Simple mock for search focus ring
+        const searchInput = document.querySelector('input[placeholder="Filter current group..."]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

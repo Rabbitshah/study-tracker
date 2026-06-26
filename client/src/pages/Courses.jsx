@@ -3,94 +3,98 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { statusColor } from '../utils/backlogCalc';
 
+// ─── Toggle component ─────────────────────────────────────────────────────────
+function Toggle({ checked, onChange }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={`toggle-track${checked ? ' on' : ''}`}
+    >
+      <div className="toggle-dot" />
+    </button>
+  );
+}
+
+// ─── CourseRow ────────────────────────────────────────────────────────────────
 function CourseRow({ course, isLocked, onComplete }) {
   const pct = course.total_hours > 0
     ? Math.round((course.completed_hours / course.total_hours) * 100)
     : 0;
 
   const queryClient = useQueryClient();
-  const [val, setVal] = useState(course.completed_hours);
+  const [val, setVal]   = useState(course.completed_hours);
   const [error, setError] = useState('');
 
-  // Sync state if course updates externally
   useEffect(() => {
     setVal(course.completed_hours);
     setError('');
   }, [course.completed_hours]);
 
   const updateMutation = useMutation({
-    mutationFn: (hours) =>
-      api.patch(`/courses/${course.id}`, { completed_hours: hours }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses'] });
-      setError('');
-    },
+    mutationFn: (hours) => api.patch(`/courses/${course.id}`, { completed_hours: hours }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['courses'] }); setError(''); },
   });
 
   function handleSave() {
     if (isLocked || course.completed) return;
     const num = parseFloat(val);
     if (isNaN(num) || num < 0 || num > parseFloat(course.total_hours)) {
-      setError(`Must be between 0 and ${course.total_hours}`);
+      setError(`Must be 0–${course.total_hours}`);
       return;
     }
     setError('');
     updateMutation.mutate(num);
   }
 
+  const accentColor = course.completed ? '#10B981' : isLocked ? 'var(--on-surface-variant)' : 'var(--primary)';
+
   return (
-    <div className="card-2" style={{ opacity: isLocked ? 0.5 : 1 }}>
+    <div style={{
+      background: 'var(--surface-container-low)',
+      border: `1px solid ${isLocked ? 'var(--border)' : 'var(--border-muted)'}`,
+      borderRadius: 8,
+      padding: '12px 16px',
+      opacity: isLocked ? 0.5 : 1,
+      transition: 'all 0.2s',
+    }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-            <span style={{ fontSize: 13, color: 'var(--color-muted)', flexShrink: 0 }}>
-              {isLocked ? '🔒' : course.completed ? '✅' : `${course.order_index}.`}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 14, color: accentColor, flexShrink: 0 }}>
+              {course.completed ? 'check_circle' : isLocked ? 'lock' : 'radio_button_unchecked'}
             </span>
-            <span style={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {course.course_name}
+            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 14, color: 'var(--on-surface)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {course.order_index}. {course.course_name}
             </span>
           </div>
 
-          {/* Progress bar */}
-          <div className="progress-track" style={{ height: 6, marginBottom: 6 }}>
-            <div
-              className="progress-fill"
-              style={{
-                width: `${pct}%`,
-                background: course.completed ? '#22c55e' : '#6366f1',
-              }}
-            />
+          <div className="progress-track" style={{ marginBottom: 6 }}>
+            <div className="progress-fill" style={{ width: `${pct}%`, background: accentColor }} />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--color-muted)', marginTop: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--on-surface-variant)' }}>
             {!isLocked && !course.completed ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max={course.total_hours}
+                    type="number" step="0.1" min="0" max={course.total_hours}
                     value={val}
                     onChange={e => setVal(e.target.value)}
                     onBlur={handleSave}
                     onKeyDown={e => e.key === 'Enter' && handleSave()}
-                    style={{
-                      width: 70,
-                      height: 28,
-                      padding: '2px 8px',
-                      fontSize: 13,
-                      background: 'var(--color-surface-3)',
-                      border: error ? '1px solid var(--color-danger)' : '1px solid var(--color-border)',
-                      borderRadius: 6,
-                    }}
+                    style={{ width: 68, height: 28, padding: '2px 8px', fontSize: 13 }}
                   />
-                  <span>h done of {parseFloat(course.total_hours).toFixed(0)}h</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>
+                    h of {parseFloat(course.total_hours).toFixed(0)}h
+                  </span>
                 </div>
-                {error && <span style={{ color: 'var(--color-danger)', fontSize: 11 }}>{error}</span>}
+                {error && <span style={{ color: 'var(--error)', fontSize: 11, fontFamily: 'var(--font-mono)' }}>{error}</span>}
               </div>
             ) : (
-              <span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>
                 {parseFloat(course.completed_hours).toFixed(1)}h / {parseFloat(course.total_hours).toFixed(0)}h
               </span>
             )}
@@ -102,7 +106,7 @@ function CourseRow({ course, isLocked, onComplete }) {
             id={`complete-course-${course.id}`}
             className="btn btn-ghost"
             onClick={() => onComplete(course.id)}
-            style={{ fontSize: 12, padding: '6px 10px', whiteSpace: 'nowrap', flexShrink: 0 }}
+            style={{ fontSize: 11, padding: '5px 10px', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             Mark Done
           </button>
@@ -112,7 +116,8 @@ function CourseRow({ course, isLocked, onComplete }) {
   );
 }
 
-function CertSection({ title, cert, color }) {
+// ─── CertSection ──────────────────────────────────────────────────────────────
+function CertSection({ title, cert, accentColor, icon }) {
   const queryClient = useQueryClient();
 
   const completeMutation = useMutation({
@@ -125,33 +130,31 @@ function CertSection({ title, cert, color }) {
   const statusClr = statusColor(cert.status);
 
   return (
-    <div className="card" style={{ marginBottom: 20 }}>
+    <div className="luminous-card" style={{ padding: '22px 24px', marginBottom: 16, borderLeft: `3px solid ${accentColor}` }}>
       {/* Header */}
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-          <h2 style={{ fontWeight: 700, fontSize: 17 }}>{title}</h2>
-          <span style={{
-            fontSize: 12, fontWeight: 700,
-            color: statusClr,
-            background: statusClr + '22',
-            padding: '3px 10px',
-            borderRadius: 20,
-            border: `1px solid ${statusClr}44`,
-          }}>
-            {cert.status}
-          </span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span className="material-symbols-outlined" style={{ color: accentColor, fontSize: 20 }}>{icon}</span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, color: 'var(--on-surface)' }}>{title}</h2>
         </div>
+        <span style={{
+          fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700,
+          color: statusClr, background: `${statusClr}20`,
+          padding: '3px 10px', borderRadius: 20, border: `1px solid ${statusClr}40`,
+          letterSpacing: '0.04em',
+        }}>
+          {cert.status}
+        </span>
+      </div>
 
-        {/* Overall progress */}
-        <div className="progress-track" style={{ height: 10, marginBottom: 8 }}>
-          <div
-            className="progress-fill"
-            style={{ width: `${cert.completion_pct}%`, background: color }}
-          />
+      {/* Overall progress */}
+      <div style={{ marginBottom: 16 }}>
+        <div className="progress-track" style={{ height: 8, marginBottom: 8 }}>
+          <div className="progress-fill" style={{ width: `${cert.completion_pct}%`, background: accentColor }} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--color-muted)' }}>
-          <span>{cert.completed_hours.toFixed(1)}h / {cert.total_hours}h done · {cert.completion_pct}%</span>
-          <span>{cert.days_remaining}d left · need {cert.hours_per_day_needed.toFixed(1)}h/day</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--on-surface-variant)' }}>
+          <span>{cert.completed_hours.toFixed(1)}h / {cert.total_hours}h · {cert.completion_pct}%</span>
+          <span>{cert.days_remaining}d left · {cert.hours_per_day_needed.toFixed(1)}h/day</span>
         </div>
       </div>
 
@@ -174,6 +177,7 @@ function CertSection({ title, cert, color }) {
   );
 }
 
+// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Courses() {
   const { data, isLoading } = useQuery({
     queryKey: ['courses'],
@@ -182,23 +186,27 @@ export default function Courses() {
 
   return (
     <div className="page fade-in">
-      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Course Tracker</h1>
-      <p style={{ color: 'var(--color-muted)', fontSize: 13, marginBottom: 24 }}>
-        Sept 14 deadline · Complete in sequence
-      </p>
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--on-surface)', marginBottom: 4 }}>
+          Course Progress
+        </h1>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--on-surface-variant)', letterSpacing: '0.04em' }}>
+          Sept 14 deadline · Complete modules in sequence
+        </p>
+      </div>
 
       {isLoading && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[1, 2].map(n => (
-            <div key={n} className="card skeleton" style={{ height: 240, width: '100%' }} />
+            <div key={n} className="skeleton" style={{ height: 220, borderRadius: 12 }} />
           ))}
         </div>
       )}
 
       {data && (
         <>
-          <CertSection title="Meta Android Developer" cert={data.meta_android} color="#f59e0b" />
-          <CertSection title="Unity Game Design" cert={data.unity} color="#10b981" />
+          <CertSection title="Meta Android Developer" cert={data.meta_android} accentColor="var(--tertiary)" icon="android" />
+          <CertSection title="Unity Game Design"       cert={data.unity}        accentColor="var(--success)"  icon="sports_esports" />
         </>
       )}
     </div>

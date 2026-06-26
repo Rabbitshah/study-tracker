@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Study Tracker | Course Progress</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&family=Syne:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(31, 31, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(61, 73, 76, 0.3);
+        }
+        .progress-fill {
+            transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(76, 215, 246, 0.15);
+            border-color: #4cd7f6;
+        }
+        body {
+            background-color: #08080F;
+            color: #e4e1ec;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #08080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f1f27;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #34343c;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#869397",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "surface-bright": "#393841",
+                      "on-secondary": "#3c0091",
+                      "primary-fixed-dim": "#4cd7f6",
+                      "surface-container": "#1f1f27",
+                      "surface-tint": "#4cd7f6",
+                      "inverse-surface": "#e4e1ec",
+                      "inverse-on-surface": "#303038",
+                      "on-tertiary-container": "#563400",
+                      "on-secondary-fixed": "#23005c",
+                      "on-primary-fixed": "#001f26",
+                      "on-surface": "#e4e1ec",
+                      "on-primary": "#003640",
+                      "on-secondary-container": "#c4abff",
+                      "error": "#ffb4ab",
+                      "on-tertiary-fixed": "#2a1700",
+                      "error-container": "#93000a",
+                      "on-background": "#e4e1ec",
+                      "surface-variant": "#34343c",
+                      "primary-fixed": "#acedff",
+                      "on-error": "#690005",
+                      "surface-container-low": "#1b1b23",
+                      "on-secondary-fixed-variant": "#5516be",
+                      "secondary-container": "#571bc1",
+                      "primary": "#4cd7f6",
+                      "secondary": "#d0bcff",
+                      "outline-variant": "#3d494c",
+                      "on-error-container": "#ffdad6",
+                      "on-tertiary": "#472a00",
+                      "surface-dim": "#13131a",
+                      "on-primary-fixed-variant": "#004e5c",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "inverse-primary": "#00687a",
+                      "primary-container": "#06b6d4",
+                      "surface-container-lowest": "#0e0d15",
+                      "tertiary": "#ffb95f",
+                      "on-surface-variant": "#bcc9cd",
+                      "secondary-fixed": "#e9ddff",
+                      "on-primary-container": "#00424f",
+                      "surface": "#13131a",
+                      "surface-container-highest": "#34343c",
+                      "background": "#13131a",
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-container-high": "#2a2931",
+                      "tertiary-container": "#e79400",
+                      "secondary-fixed-dim": "#d0bcff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "xl": "32px",
+                      "container-margin": "24px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Syne"],
+                      "display": ["Syne"],
+                      "label-mono": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "headline-lg": ["Syne"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Syne"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "label-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- FIXED SIDEBAR (From JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-[240px] bg-surface-container/80 backdrop-blur-xl border-r border-primary/20 shadow-xl flex flex-col py-lg z-50">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">school</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Study Tracker</h1>
+<p class="font-label-mono text-[10px] text-on-surface-variant uppercase tracking-widest">Premium GRE Prep</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col">
+<!-- Today -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="today">today</span>
+<span class="font-label-mono text-label-mono">Today</span>
+</a>
+<!-- Weekly -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_view_week">calendar_view_week</span>
+<span class="font-label-mono text-label-mono">Weekly</span>
+</a>
+<!-- Backlog -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-mono text-label-mono">Backlog</span>
+</a>
+<!-- Courses (Active State) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary border-l-4 border-primary transition-transform active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-mono text-label-mono">Courses</span>
+</a>
+<!-- GRE -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-mono text-label-mono">GRE</span>
+</a>
+<!-- Word List -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="font_download">font_download</span>
+<span class="font-label-mono text-label-mono">Word List</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-mono text-label-mono">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto pt-lg">
+<button class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-error-container text-on-error-container rounded-xl font-label-mono hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Sign Out
+            </button>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="ml-[240px] min-h-screen flex flex-col">
+<!-- TOP APP BAR -->
+<header class="sticky top-0 z-40 w-full bg-surface/50 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-lg py-sm">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Course Tracker</h2>
+<div class="px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/30 text-primary-fixed-dim font-label-mono text-xs flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-fixed-dim animate-pulse"></span>
+                    Sept 14 deadline
+                </div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-primary transition-all w-64 input-glow" placeholder="Search courses..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-on-surface-variant text-xl pointer-events-none">search</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30">
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-detail portrait of a focused young professional student working in a high-tech dark environment with blue ambient glow. The visual style is crisp, clean, and futuristic, with soft focus background elements of digital interfaces and glowing data visualizations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiJ3nMgCglPte65uvgUkeIx2jtodyNKWbygTcSytV7QThH2vXveb0remzAof9fWrU1pFmlhJ4Be2whWTKO07_WkDVlwvk4GtCqsOJ0JTwi3cOKL_e0AHMVzYkNsMCEE6seyDyRf5szGm3tHD0t6Ag0XamZxdXH1pktW2BA8NSMkPR3221ln9dREgREZEgYwvwPuGM0w5FUtrwUjJGYhtig3NMFlC-T-bGhXPA4ep8eem27J-2pvjxd5VT_uSXSdnf-HPjBlH-tobpx"/>
+</div>
+<button class="bg-primary px-lg py-2 rounded-full text-on-primary font-label-mono text-sm hover:opacity-90 transition-opacity active:opacity-80">
+                    End Day
+                </button>
+</div>
+</header>
+<!-- DASHBOARD CANVAS -->
+<section class="p-lg flex flex-col gap-lg">
+<!-- COURSE CARDS BENTO GRID -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-lg">
+<!-- CERT CARD: META ANDROID -->
+<div class="glass-panel p-lg rounded-xl flex flex-col gap-md relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div class="flex justify-between items-start">
+<div>
+<span class="font-label-caps text-tertiary-fixed-dim tracking-widest uppercase mb-1 block">Certification</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Meta Android Developer</h3>
+</div>
+<span class="px-4 py-1 rounded-full bg-error/10 text-error border border-error/30 font-label-mono text-xs uppercase tracking-wider">Behind</span>
+</div>
+<!-- Progress Bar Section -->
+<div class="mt-md">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-mono text-on-surface-variant text-sm">Overall Progress</span>
+<span class="font-label-mono text-on-surface text-lg font-bold">26%</span>
+</div>
+<div class="h-[10px] w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="progress-fill h-full bg-gradient-to-r from-tertiary-container to-tertiary-fixed-dim" style="width: 26%"></div>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-4 gap-4 py-md border-y border-outline-variant/20 mt-sm">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Time Invested</span>
+<span class="font-label-mono text-sm text-on-surface">12.5h / 48h</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Timeline</span>
+<span class="font-label-mono text-sm text-on-surface">45 days left</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Daily Goal</span>
+<span class="font-label-mono text-sm text-tertiary-fixed-dim">0.8h/day</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Status</span>
+<span class="font-label-mono text-sm text-error">Critical</span>
+</div>
+</div>
+<!-- Course Rows List -->
+<div class="flex flex-col gap-xs mt-sm">
+<!-- Completed -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50 opacity-60">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface-variant font-body-md">M1: Introduction to Mobile Dev</span>
+</div>
+<span class="font-label-mono text-xs text-outline">4.5h</span>
+</div>
+<!-- Active -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container border border-primary/20 shadow-lg group/row">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-primary/20 text-primary font-label-mono text-xs">02</span>
+<span class="text-on-surface font-body-md font-medium">M2: Version Control with Git</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<input class="w-16 bg-surface-dim border border-outline-variant/30 rounded px-2 py-1 text-right font-label-mono text-sm focus:outline-none input-glow" type="text" value="1.5"/>
+<span class="absolute right-[-14px] top-1.5 text-[10px] text-on-surface-variant">h</span>
+</div>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded text-xs font-label-mono transition-all">Mark Done</button>
+</div>
+</div>
+<!-- Locked -->
+<div class="flex items-center justify-between p-3 rounded-lg opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+<span class="text-on-surface-variant font-body-md">M3: Programming Fundamentals</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+<!-- CERT CARD: UNITY DEVELOPER -->
+<div class="glass-panel p-lg rounded-xl flex flex-col gap-md relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start">
+<div>
+<span class="font-label-caps text-primary tracking-widest uppercase mb-1 block">Certification</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Unity Certified Expert</h3>
+</div>
+<span class="px-4 py-1 rounded-full bg-primary/10 text-primary border border-primary/30 font-label-mono text-xs uppercase tracking-wider">On Track</span>
+</div>
+<!-- Progress Bar Section -->
+<div class="mt-md">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-mono text-on-surface-variant text-sm">Overall Progress</span>
+<span class="font-label-mono text-on-surface text-lg font-bold">64%</span>
+</div>
+<div class="h-[10px] w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="progress-fill h-full bg-gradient-to-r from-primary-container to-primary" style="width: 64%"></div>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-4 gap-4 py-md border-y border-outline-variant/20 mt-sm">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Time Invested</span>
+<span class="font-label-mono text-sm text-on-surface">32h / 50h</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Timeline</span>
+<span class="font-label-mono text-sm text-on-surface">12 days left</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Daily Goal</span>
+<span class="font-label-mono text-sm text-primary">1.5h/day</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] uppercase font-label-mono text-on-surface-variant">Status</span>
+<span class="font-label-mono text-sm text-primary">Efficient</span>
+</div>
+</div>
+<!-- Course Rows List -->
+<div class="flex flex-col gap-xs mt-sm">
+<!-- Completed -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/50 opacity-60">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface-variant font-body-md">Advanced C# Scripting</span>
+</div>
+<span class="font-label-mono text-xs text-outline">12h</span>
+</div>
+<!-- Active -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container border border-primary/20 shadow-lg">
+<div class="flex items-center gap-3">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-primary/20 text-primary font-label-mono text-xs">05</span>
+<span class="text-on-surface font-body-md font-medium">Shaders & VFX Graphs</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<input class="w-16 bg-surface-dim border border-outline-variant/30 rounded px-2 py-1 text-right font-label-mono text-sm focus:outline-none input-glow" type="text" value="3.0"/>
+<span class="absolute right-[-14px] top-1.5 text-[10px] text-on-surface-variant">h</span>
+</div>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1 rounded text-xs font-label-mono transition-all">Mark Done</button>
+</div>
+</div>
+<!-- Locked -->
+<div class="flex items-center justify-between p-3 rounded-lg opacity-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+<span class="text-on-surface-variant font-body-md">Networking for Multiplayer</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+</div>
+<!-- LOWER SUMMARY / ANALYTICS SECTION -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<div class="lg:col-span-2 glass-panel rounded-xl p-lg flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h4 class="font-headline-md text-headline-md">Weekly Activity</h4>
+<div class="flex gap-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+<span class="text-xs font-label-mono text-on-surface-variant">Meta</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-label-mono text-on-surface-variant">Unity</span>
+</div>
+</div>
+</div>
+<!-- Activity Visualization Placeholder -->
+<div class="flex-1 min-h-[200px] bg-surface-container-low rounded-lg border border-outline-variant/10 relative flex items-end justify-between p-4 px-8 overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="h-full w-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent"></div>
+</div>
+<!-- Bar chart dummy -->
+<div class="flex flex-col items-center gap-2 w-full">
+<div class="flex items-end justify-between w-full h-[140px] gap-4">
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 40%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 30%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Mon</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 60%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 20%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Tue</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 20%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 80%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Wed</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 85%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 10%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Thu</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 10%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 90%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Fri</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 30%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 40%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Sat</span>
+</div>
+<div class="flex flex-col gap-1 w-full max-w-[24px]">
+<div class="w-full bg-tertiary rounded-t-sm" style="height: 15%"></div>
+<div class="w-full bg-primary rounded-t-sm" style="height: 5%"></div>
+<span class="text-[10px] font-label-mono text-on-surface-variant mt-2">Sun</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-lg flex flex-col gap-lg">
+<h4 class="font-headline-md text-headline-md">Course Assets</h4>
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-variant/30 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded bg-tertiary/10 flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium">Android Dev PDF Bundle</span>
+<span class="text-[10px] text-on-surface-variant font-label-mono">12.4 MB · 2 days ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-variant/30 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">video_library</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium">Unity VR Tutorial Pack</span>
+<span class="text-[10px] text-on-surface-variant font-label-mono">4.2 GB · Today</span>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-variant/30 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium">Repo: GRE Quant Scripts</span>
+<span class="text-[10px] text-on-surface-variant font-label-mono">Git · Local Draft</span>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full border border-outline-variant/30 py-3 rounded-xl font-label-mono text-xs uppercase hover:bg-surface-variant/30 transition-all">
+                        Open File Manager
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Progress Bar Animation on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            progressFills.forEach(fill => {
+                const targetWidth = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.width = targetWidth;
+                }, 300);
+            });
+
+            // Interactive logic for inputs
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('scale-[1.02]');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.classList.remove('scale-[1.02]');
+                });
+            });
+        });
+
+        // Simple scale effect for mark done buttons
+        const doneButtons = document.querySelectorAll('button:contains("Mark Done")');
+        doneButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.innerHTML = "Saved";
+                this.classList.add('bg-primary', 'text-on-primary');
+                this.classList.remove('bg-primary/10', 'text-primary');
+            });
+        });
+    </script>
+</body></html>

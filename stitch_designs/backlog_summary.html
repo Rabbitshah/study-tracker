@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Study Tracker | Backlog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            background: rgba(31, 31, 39, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-left {
+            animation: slideLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .glow-rose {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #13131a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3d494c;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#869397",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-bright": "#393841",
+                        "on-secondary": "#3c0091",
+                        "primary-fixed-dim": "#4cd7f6",
+                        "surface-container": "#1f1f27",
+                        "surface-tint": "#4cd7f6",
+                        "inverse-surface": "#e4e1ec",
+                        "inverse-on-surface": "#303038",
+                        "on-tertiary-container": "#563400",
+                        "on-secondary-fixed": "#23005c",
+                        "on-primary-fixed": "#001f26",
+                        "on-surface": "#e4e1ec",
+                        "on-primary": "#003640",
+                        "on-secondary-container": "#c4abff",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#2a1700",
+                        "error-container": "#93000a",
+                        "on-background": "#e4e1ec",
+                        "surface-variant": "#34343c",
+                        "primary-fixed": "#acedff",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1b1b23",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "secondary-container": "#571bc1",
+                        "primary": "#4cd7f6",
+                        "secondary": "#d0bcff",
+                        "outline-variant": "#3d494c",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#472a00",
+                        "surface-dim": "#13131a",
+                        "on-primary-fixed-variant": "#004e5c",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "inverse-primary": "#00687a",
+                        "primary-container": "#06b6d4",
+                        "surface-container-lowest": "#0e0d15",
+                        "tertiary": "#ffb95f",
+                        "on-surface-variant": "#bcc9cd",
+                        "secondary-fixed": "#e9ddff",
+                        "on-primary-container": "#00424f",
+                        "surface": "#13131a",
+                        "surface-container-highest": "#34343c",
+                        "background": "#13131a",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-high": "#2a2931",
+                        "tertiary-container": "#e79400",
+                        "secondary-fixed-dim": "#d0bcff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "xl": "32px",
+                        "container-margin": "24px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Syne"],
+                        "display": ["Syne"],
+                        "label-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Syne"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Syne"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-[240px] flex flex-col h-full py-lg glass-sidebar border-r border-primary/20 shadow-xl z-50">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]">school</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary leading-none">Study Tracker</h1>
+<p class="font-label-mono text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Premium GRE Prep</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="today">today</span>
+<span class="font-label-mono text-label-mono">Today</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_view_week">calendar_view_week</span>
+<span class="font-label-mono text-label-mono">Weekly</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary border-l-4 border-primary" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-mono text-label-mono">Backlog</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-mono text-label-mono">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-mono text-label-mono">GRE</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="font_download">font_download</span>
+<span class="font-label-mono text-label-mono">Word List</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-mono text-label-mono">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-error hover:bg-error/10 transition-colors duration-200 rounded-lg">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-mono text-label-mono">Sign Out</span>
+</button>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 w-full bg-surface/50 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-lg py-sm ml-[240px] w-[calc(100%-240px)]">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary">Backlog</span>
+</div>
+<div class="flex items-center gap-lg">
+<button class="px-md py-xs bg-primary text-on-primary font-label-mono text-[12px] rounded-full hover:opacity-80 transition-all active:scale-95">
+                End Day
+            </button>
+<div class="flex items-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[240px] p-lg min-h-screen custom-scrollbar">
+<div class="max-w-6xl mx-auto space-y-lg">
+<!-- Header Section -->
+<div class="animate-slide-left" style="animation-delay: 0s;">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Study Debt</h2>
+<p class="text-on-surface-variant font-body-md">Visualize and clear your outstanding learning hours.</p>
+</div>
+<!-- Warning Banner -->
+<div class="animate-slide-left bg-error/10 border border-error rounded-xl p-md flex items-center gap-md glow-rose" style="animation-delay: 0.1s;">
+<span class="material-symbols-outlined text-error text-[24px]">warning</span>
+<div class="flex-1">
+<p class="font-label-mono text-error font-bold">CRITICAL DEBT LEVEL</p>
+<p class="text-on-surface-variant text-[14px]">Your backlog is large and may affect your retention. Consider prioritizing Quantitative Verbal modules today.</p>
+</div>
+</div>
+<!-- Top Grid: Stats & Action -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Total Backlog Card -->
+<div class="animate-slide-left md:col-span-2 bg-surface-container border border-outline-variant/30 rounded-xl p-xl flex flex-col justify-center relative overflow-hidden" style="animation-delay: 0.2s;">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-[120px] text-error">history</span>
+</div>
+<p class="font-label-mono text-on-surface-variant mb-sm uppercase tracking-widest text-[12px]">Accumulated Debt</p>
+<div class="flex items-baseline gap-sm">
+<h3 class="font-headline-lg text-[64px] leading-none text-error font-extrabold tracking-tighter">4h 30min</h3>
+</div>
+<p class="text-on-surface-variant mt-sm font-body-md">Total owed across all subjects in the current sprint.</p>
+</div>
+<!-- Streak Info / Mini-Visual -->
+<div class="animate-slide-left bg-surface-container border border-outline-variant/30 rounded-xl p-lg flex flex-col items-center justify-center text-center" style="animation-delay: 0.3s;">
+<div class="w-20 h-20 rounded-full border-4 border-error/20 flex items-center justify-center mb-md relative">
+<div class="absolute inset-0 border-4 border-error rounded-full" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 30% 0%);"></div>
+<span class="material-symbols-outlined text-error text-[32px]">trending_up</span>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface leading-tight">90% Full</p>
+<p class="text-on-surface-variant text-[14px] mt-xs">Capacity limit: 5h</p>
+</div>
+</div>
+<!-- Per-Subject Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Quantitative Subject -->
+<div class="animate-slide-left bg-surface-container border-l-4 border-primary border border-outline-variant/10 rounded-xl p-lg flex flex-col gap-md group hover:border-primary/40 transition-all" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">GRE Quant</h4>
+<p class="font-label-mono text-[12px] text-primary">Moderate Priority</p>
+</div>
+<div class="px-sm py-xs bg-primary/10 rounded text-primary font-label-mono text-[12px]">2h 15m</div>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-[12px] font-label-mono text-on-surface-variant">
+<span>FILL LEVEL</span>
+<span>45%</span>
+</div>
+<div class="h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<button class="mt-md w-full py-sm border border-outline-variant/30 rounded-lg font-label-mono text-[14px] hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2 group-hover:bg-primary/5" onclick="confirmClear(this)">
+<span class="material-symbols-outlined text-[18px]">auto_fix_high</span>
+<span>Clear backlog</span>
+</button>
+</div>
+<!-- Verbal Subject -->
+<div class="animate-slide-left bg-surface-container border-l-4 border-tertiary border border-outline-variant/10 rounded-xl p-lg flex flex-col gap-md group hover:border-tertiary/40 transition-all" style="animation-delay: 0.5s;">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">GRE Verbal</h4>
+<p class="font-label-mono text-[12px] text-tertiary uppercase">High Severity</p>
+</div>
+<div class="px-sm py-xs bg-tertiary/10 rounded text-tertiary font-label-mono text-[12px]">1h 45m</div>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-[12px] font-label-mono text-on-surface-variant">
+<span>FILL LEVEL</span>
+<span>35%</span>
+</div>
+<div class="h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 35%"></div>
+</div>
+</div>
+<button class="mt-md w-full py-sm border border-outline-variant/30 rounded-lg font-label-mono text-[14px] hover:border-tertiary hover:text-tertiary transition-all flex items-center justify-center gap-2" onclick="confirmClear(this)">
+<span class="material-symbols-outlined text-[18px]">auto_fix_high</span>
+<span>Clear backlog</span>
+</button>
+</div>
+<!-- Data Analysis Subject -->
+<div class="animate-slide-left bg-surface-container border-l-4 border-secondary border border-outline-variant/10 rounded-xl p-lg flex flex-col gap-md group hover:border-secondary/40 transition-all" style="animation-delay: 0.6s;">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Data Analysis</h4>
+<p class="font-label-mono text-[12px] text-secondary uppercase">Low Priority</p>
+</div>
+<div class="px-sm py-xs bg-secondary/10 rounded text-secondary font-label-mono text-[12px]">0h 30m</div>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-[12px] font-label-mono text-on-surface-variant">
+<span>FILL LEVEL</span>
+<span>10%</span>
+</div>
+<div class="h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 10%"></div>
+</div>
+</div>
+<button class="mt-md w-full py-sm border border-outline-variant/30 rounded-lg font-label-mono text-[14px] hover:border-secondary hover:text-secondary transition-all flex items-center justify-center gap-2" onclick="confirmClear(this)">
+<span class="material-symbols-outlined text-[18px]">auto_fix_high</span>
+<span>Clear backlog</span>
+</button>
+</div>
+</div>
+<!-- Subject Visual Context -->
+<div class="animate-slide-left grid grid-cols-1 md:grid-cols-2 gap-lg" style="animation-delay: 0.7s;">
+<div class="relative rounded-2xl overflow-hidden h-64 border border-outline-variant/20">
+<div class="bg-cover bg-center w-full h-full" data-alt="A cinematic, high-detail digital rendering of a futuristic study hub at night. Deep dark blues and cyan neon lights reflect off glossy surfaces and holographic displays. The environment is clean, tech-focused, and immersive, emphasizing a productive deep work flow state. Sharp focus and cinematic lighting create a sense of advanced agency." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBidyQfLssGbngjRg-b7NVHe45UL2yqdAIYjn10PQH8Rq4GMM4adqGRiAYW1y7KvgYdrwh4pJpqOU0pP_SB0MtIOExJ8Op9ff0YTbEAQhmz1Pi1UrimQO8DLyXdFk7A_PtS1VMmmYHPNYYOlv8mD3DkFjka8vfq1VLUvxOLXH_Jn05U45WuGQSRJmk1K2lazdSs_McHFHjAjcVS5OZZmWGbJX9MvZbxxxo2BDmGJxdMo-rUhlBjwFWL2qyOTAq_dqS3Y3Kxub1mWK0J')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-80"></div>
+<div class="absolute bottom-0 left-0 p-lg">
+<p class="font-label-mono text-primary text-[12px]">FOCUS MODE</p>
+<h4 class="font-headline-md text-headline-md">Clear 30min now?</h4>
+<button class="mt-sm bg-primary text-on-primary px-lg py-xs rounded-lg font-label-mono text-[12px] hover:scale-105 transition-transform">Start Pomodoro</button>
+</div>
+</div>
+<div class="relative rounded-2xl overflow-hidden h-64 border border-outline-variant/20">
+<div class="bg-cover bg-center w-full h-full" data-alt="A detailed 3D visualization of a network of data nodes connected by glowing lines in a deep violet and magenta palette. The style is vaporwave-inspired with high-contrast neon accents and a dark-mode minimalist aesthetic. It represents the complexity and interconnectivity of academic subjects in a high-performance learner's mental maps." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJV0S8d6hFuJqlsw2FVuPyZ3-lN8t90A1XoFjrbcpk24Lig7SUiQGLxYwf4msSV9GLO3XAR2w-BHQtJcKZI20wN7jLxvTWfB6L_gPUFfce1oLpy2m0Z-jVlAy2DBasdnKnNjsy1bAV-6LLT3zSjRU0e-ZduBV_91155JNeJpLu0wWWwewkm3LTzr2hpRuc7R1awk6M5daZ9LwQWN-xln4hmtkMxFqEPgExDypU11H-fmVcVpzc95i7bvIX-ufjRyHDj0Cg4y6uaoOv')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-80"></div>
+<div class="absolute bottom-0 left-0 p-lg">
+<p class="font-label-mono text-secondary text-[12px]">DEBT IMPACT</p>
+<h4 class="font-headline-md text-headline-md">Subject Dependencies</h4>
+<p class="text-on-surface-variant text-[14px] max-w-xs mt-xs">Unresolved Quant backlog may delay Data Analysis modules.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function confirmClear(button) {
+            const originalContent = button.innerHTML;
+            if (!button.dataset.confirming) {
+                button.dataset.confirming = "true";
+                button.classList.add('bg-error/10', 'text-error', 'border-error/50');
+                button.innerHTML = `
+                    <span class="material-symbols-outlined text-[18px]">done_all</span>
+                    <span>Confirm clearing?</span>
+                `;
+                
+                // Auto reset if no second click
+                setTimeout(() => {
+                    if (button.dataset.confirming === "true") {
+                        button.dataset.confirming = "";
+                        button.innerHTML = originalContent;
+                        button.classList.remove('bg-error/10', 'text-error', 'border-error/50');
+                    }
+                }, 3000);
+            } else {
+                // Execute clear
+                const card = button.closest('.animate-slide-left');
+                card.style.transition = 'all 0.5s ease-out';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // Apply staggering animations programmatically
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.animate-slide-left');
+            cards.forEach((card, i) => {
+                card.style.animationDelay = `${i * 0.08}s`;
+            });
+        });
+    </script>
+</body></html>

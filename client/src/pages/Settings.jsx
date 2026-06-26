@@ -3,6 +3,21 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import useAppStore from '../store/useAppStore';
 
+// ─── Toggle Component ─────────────────────────────────────────────────────────
+function Toggle({ checked, onChange }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={`toggle-track${checked ? ' on' : ''}`}
+    >
+      <div className="toggle-dot" />
+    </button>
+  );
+}
+
 export default function Settings() {
   const { logout } = useAppStore();
   const queryClient = useQueryClient();
@@ -98,39 +113,52 @@ export default function Settings() {
 
   return (
     <div className="page fade-in">
-      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Settings</h1>
-      <p style={{ color: 'var(--color-muted)', fontSize: 13, marginBottom: 24 }}>
-        Adjust targets, deadlines, and subject status
-      </p>
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--on-surface)', marginBottom: 4 }}>
+          Settings
+        </h1>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--on-surface-variant)', letterSpacing: '0.04em' }}>
+          Adjust targets, deadlines, and subject status
+        </p>
+      </div>
 
       {isLoading && (
-        <div style={{ color: 'var(--color-muted)', textAlign: 'center', padding: 40 }}>Loading...</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+          {[1, 2].map(n => (
+            <div key={n} className="skeleton" style={{ height: 260, borderRadius: 12 }} />
+          ))}
+        </div>
       )}
 
       {/* Per-subject settings */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }} className="stagger">
         {subjects.map(s => (
-          <div className="card" key={s.id} style={{ borderLeft: `4px solid ${s.color}` }}>
+          <div className="luminous-card" key={s.id} style={{ borderLeft: `3px solid ${s.color}`, padding: '22px 24px' }}>
             {/* Subject header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: s.color }} />
-              <span style={{ fontWeight: 700, fontSize: 15, flex: 1 }}>{s.name}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: s.color, boxShadow: `0 0 10px ${s.color}60` }} />
+                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: 'var(--on-surface)' }}>
+                  {s.name}
+                </span>
+              </div>
+              
               {/* Active toggle */}
-              <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: 13, color: 'var(--color-muted)' }}>
-                <input
-                  type="checkbox"
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Active
+                </span>
+                <Toggle
                   checked={getEdit(s.id, 'active', s.active)}
-                  onChange={e => setEdit(s.id, 'active', e.target.checked, s)}
-                  style={{ width: 'auto', cursor: 'pointer' }}
+                  onChange={val => setEdit(s.id, 'active', val, s)}
                 />
-                Active
-              </label>
+              </div>
             </div>
 
             {/* Targets */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, color: 'var(--color-muted)', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
                   Weekday target (min)
                 </label>
                 <input
@@ -138,16 +166,18 @@ export default function Settings() {
                   min="0"
                   value={getEdit(s.id, 'weekday_target_minutes', s.weekday_target_minutes)}
                   onChange={e => setEdit(s.id, 'weekday_target_minutes', parseInt(e.target.value) || 0, s)}
-                  style={{ padding: '8px 10px', borderColor: errors[s.id]?.weekday ? 'var(--color-danger)' : 'var(--color-border)' }}
+                  style={{
+                    borderColor: errors[s.id]?.weekday ? 'var(--error)' : 'var(--border-muted)',
+                  }}
                 />
                 {errors[s.id]?.weekday && (
-                  <span style={{ color: 'var(--color-danger)', fontSize: 11, display: 'block', marginTop: 4 }}>
+                  <span style={{ color: 'var(--error)', fontSize: 11, fontFamily: 'var(--font-mono)', display: 'block', marginTop: 4 }}>
                     {errors[s.id].weekday}
                   </span>
                 )}
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: 12, color: 'var(--color-muted)', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
                   Weekend target (min)
                 </label>
                 <input
@@ -155,10 +185,12 @@ export default function Settings() {
                   min="0"
                   value={getEdit(s.id, 'weekend_target_minutes', s.weekend_target_minutes)}
                   onChange={e => setEdit(s.id, 'weekend_target_minutes', parseInt(e.target.value) || 0, s)}
-                  style={{ padding: '8px 10px', borderColor: errors[s.id]?.weekend ? 'var(--color-danger)' : 'var(--color-border)' }}
+                  style={{
+                    borderColor: errors[s.id]?.weekend ? 'var(--error)' : 'var(--border-muted)',
+                  }}
                 />
                 {errors[s.id]?.weekend && (
-                  <span style={{ color: 'var(--color-danger)', fontSize: 11, display: 'block', marginTop: 4 }}>
+                  <span style={{ color: 'var(--error)', fontSize: 11, fontFamily: 'var(--font-mono)', display: 'block', marginTop: 4 }}>
                     {errors[s.id].weekend}
                   </span>
                 )}
@@ -166,54 +198,55 @@ export default function Settings() {
             </div>
 
             {/* Deadline */}
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 12, color: 'var(--color-muted)', marginBottom: 6 }}>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: 'block', fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
                 Deadline
               </label>
               <input
                 type="date"
                 value={getEdit(s.id, 'deadline', s.deadline?.split('T')?.[0] || s.deadline || '')}
                 onChange={e => setEdit(s.id, 'deadline', e.target.value, s)}
-                style={{ padding: '8px 10px', borderColor: errors[s.id]?.deadline ? 'var(--color-danger)' : 'var(--color-border)' }}
+                style={{
+                  borderColor: errors[s.id]?.deadline ? 'var(--error)' : 'var(--border-muted)',
+                }}
               />
               {errors[s.id]?.deadline && (
-                <span style={{ color: 'var(--color-danger)', fontSize: 11, display: 'block', marginTop: 4 }}>
+                <span style={{ color: 'var(--error)', fontSize: 11, fontFamily: 'var(--font-mono)', display: 'block', marginTop: 4 }}>
                   {errors[s.id].deadline}
                 </span>
               )}
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               <button
                 id={`save-subject-${s.id}`}
                 className="btn btn-primary"
                 onClick={() => saveSubject(s)}
                 disabled={!edits[s.id] || updateMutation.isPending || Object.values(errors[s.id] || {}).some(Boolean)}
-                style={{ flex: 1, fontSize: 13 }}
+                style={{ flex: 1 }}
               >
                 {saved[s.id] ? '✓ Saved' : 'Save Changes'}
               </button>
 
               {confirmReset === s.id ? (
-                <>
-                  <button className="btn btn-ghost" onClick={() => setConfirmReset(null)} style={{ fontSize: 12 }}>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="btn btn-ghost" onClick={() => setConfirmReset(null)}>
                     Cancel
                   </button>
                   <button
                     className="btn btn-danger"
                     onClick={() => clearBacklogMutation.mutate(s.id)}
                     disabled={clearBacklogMutation.isPending}
-                    style={{ fontSize: 12 }}
                   >
                     Confirm Reset
                   </button>
-                </>
+                </div>
               ) : (
                 <button
                   className="btn btn-ghost"
                   onClick={() => setConfirmReset(s.id)}
-                  style={{ fontSize: 12, color: '#fca5a5' }}
+                  style={{ color: 'var(--error)', borderColor: 'rgba(255, 180, 171, 0.2)' }}
                 >
                   Reset Backlog
                 </button>
@@ -224,16 +257,21 @@ export default function Settings() {
       </div>
 
       {/* Account section */}
-      <div className="card">
-        <h2 style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>Account</h2>
+      <div className="luminous-card" style={{ padding: '24px', marginTop: 24 }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--on-surface)', marginBottom: 6 }}>
+          Account
+        </h2>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--on-surface-variant)', marginBottom: 20 }}>
+          Manage your session and access controls
+        </p>
         <button
           id="settings-logout"
-          className="btn btn-ghost"
+          className="btn btn-danger"
           onClick={() => {
             api.post('/auth/logout').catch(() => {});
             logout();
           }}
-          style={{ width: '100%', color: '#fca5a5' }}
+          style={{ width: '100%' }}
         >
           Sign Out
         </button>

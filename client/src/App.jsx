@@ -10,6 +10,7 @@ import Weekly from './pages/Weekly';
 import Backlog from './pages/Backlog';
 import Courses from './pages/Courses';
 import GRE from './pages/GRE';
+import WordList from './pages/WordList';
 import Settings from './pages/Settings';
 import NavBar from './components/NavBar';
 import QuickLogButton from './components/QuickLogButton';
@@ -46,10 +47,12 @@ function ProtectedLayout() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'var(--color-muted)',
-        fontSize: 14,
+        flexDirection: 'column',
+        gap: 16,
+        background: 'var(--bg)',
       }}>
-        Loading...
+        <span className="material-symbols-outlined" style={{ color: 'var(--primary)', fontSize: 40, animation: 'pulse 1.5s infinite' }}>school</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.1em', color: 'var(--on-surface-variant)', textTransform: 'uppercase' }}>Loading…</span>
       </div>
     );
   }
@@ -72,14 +75,19 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster
-        position="top-center"
+        position="top-right"
         toastOptions={{
           style: {
-            background: '#1c1c28',
-            color: '#f0f0f8',
-            border: '1px solid #2a2a3d',
-            fontSize: '14px',
+            background: 'var(--surface-container)',
+            color: 'var(--on-surface)',
+            border: '1px solid var(--border)',
+            fontSize: '13px',
+            fontFamily: 'var(--font-mono)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            borderRadius: '10px',
           },
+          success: { iconTheme: { primary: 'var(--primary)', secondary: 'var(--on-primary)' } },
+          error: { iconTheme: { primary: 'var(--error)', secondary: '#1a0000' } },
         }}
       />
       <BrowserRouter>
@@ -95,6 +103,7 @@ function App() {
             <Route path="/backlog"  element={<Backlog />} />
             <Route path="/courses"  element={<Courses />} />
             <Route path="/gre"      element={<GRE />} />
+            <Route path="/vocab"     element={<WordList />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
 

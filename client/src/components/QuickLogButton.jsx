@@ -46,28 +46,28 @@ export default function QuickLogButton() {
       <motion.button
         id="quick-log-fab"
         className="fab-button"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.94 }}
         onClick={() => setOpen(true)}
         style={{
           position: 'fixed',
           right: 20,
           zIndex: 50,
-          width: 56,
-          height: 56,
+          width: 52,
+          height: 52,
           borderRadius: '50%',
-          background: 'var(--gradient-gre)',
-          border: 'none',
-          color: 'white',
-          fontSize: 24,
+          background: 'var(--primary)',
+          border: '1px solid rgba(76,215,246,0.4)',
+          color: 'var(--on-primary)',
+          fontSize: 22,
           cursor: 'pointer',
-          boxShadow: '0 4px 24px rgba(99,102,241,0.5)',
+          boxShadow: '0 4px 24px rgba(76,215,246,0.4)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        +
+        <span className="material-symbols-outlined" style={{ fontSize: 24 }}>add</span>
       </motion.button>
 
       {/* Toast */}
@@ -83,14 +83,16 @@ export default function QuickLogButton() {
               left: '50%',
               transform: 'translateX(-50%)',
               zIndex: 200,
-              background: 'rgba(34,197,94,0.15)',
-              border: '1px solid rgba(34,197,94,0.3)',
+              background: 'rgba(16,185,129,0.12)',
+              border: '1px solid rgba(16,185,129,0.3)',
               borderRadius: 10,
               padding: '10px 18px',
-              fontSize: 14,
-              fontWeight: 600,
-              color: '#86efac',
+              fontSize: 13,
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 700,
+              color: 'var(--success)',
               whiteSpace: 'nowrap',
+              backdropFilter: 'blur(12px)',
             }}
           >
             ✓ {toast}
@@ -127,11 +129,12 @@ export default function QuickLogButton() {
                 left: 0,
                 right: 0,
                 zIndex: 100,
-                background: 'var(--color-surface)',
+                background: 'rgba(19,19,26,0.95)',
                 borderRadius: '20px 20px 0 0',
                 padding: '24px 20px 40px',
-                border: '1px solid var(--color-border)',
+                border: '1px solid var(--border)',
                 borderBottom: 'none',
+                backdropFilter: 'blur(20px)',
               }}
             >
               <div style={{
@@ -141,7 +144,7 @@ export default function QuickLogButton() {
                 margin: '0 auto 20px',
               }} />
 
-              <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, marginBottom: 16, color: 'var(--on-surface)' }}>
                 Quick Log — Today
               </h3>
 
@@ -154,9 +157,10 @@ export default function QuickLogButton() {
                       id={`ql-subject-${s.id}`}
                       onClick={() => setSelectedSubject(s.id)}
                       style={{
-                        background: 'var(--color-surface-2)',
-                        border: `2px solid ${s.color}44`,
-                        borderRadius: 12,
+                        background: 'var(--surface-container)',
+                        border: `1px solid ${s.color}40`,
+                        borderLeft: `3px solid ${s.color}`,
+                        borderRadius: 10,
                         padding: '14px 12px',
                         cursor: 'pointer',
                         display: 'flex',

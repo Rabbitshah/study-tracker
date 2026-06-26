@@ -23,92 +23,136 @@ export default function Backlog() {
   });
 
   const totalMinutes = backlogItems.reduce((s, b) => s + parseInt(b.accumulated_minutes), 0);
-  const TWO_WEEKS = 14 * (45 + 45 + 60 + 30); // rough 2-week threshold
+  const TWO_WEEKS   = 14 * (45 + 45 + 60 + 30);
+  const isCritical  = totalMinutes > TWO_WEEKS;
+
+  // Severity helpers
+  function getSeverity(min) {
+    if (min === 0)        return { label: 'No backlog',       color: 'var(--primary)' };
+    if (min < 120)        return { label: 'MINOR',            color: 'var(--primary)' };
+    if (min < 300)        return { label: 'MODERATE',         color: 'var(--tertiary)' };
+    return                       { label: 'HIGH',             color: 'var(--error)' };
+  }
 
   return (
     <div className="page fade-in">
-      <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Backlog</h1>
-      <p style={{ color: 'var(--color-muted)', fontSize: 13, marginBottom: 16 }}>
-        Missed time that carries into tomorrow's plan
-      </p>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, color: 'var(--on-surface)', marginBottom: 4 }}>
+          Study Debt
+        </h1>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--on-surface-variant)', letterSpacing: '0.04em' }}>
+          Visualize and clear your outstanding learning hours
+        </p>
+      </div>
 
-      {/* Large backlog warning */}
-      {totalMinutes > TWO_WEEKS && (
-        <div style={{
-          background: 'rgba(239,68,68,0.1)',
-          border: '1px solid rgba(239,68,68,0.3)',
-          borderRadius: 12,
-          padding: '12px 16px',
-          fontSize: 13,
-          color: '#fca5a5',
-          marginBottom: 16,
+      {/* Critical warning banner */}
+      {isCritical && (
+        <div className="slide-left luminous-card" style={{
+          background: 'rgba(255,180,171,0.08)',
+          borderLeft: '3px solid var(--error)',
+          padding: '14px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          marginBottom: 20,
+          boxShadow: '0 0 20px rgba(255,180,171,0.06)',
         }}>
-          ⚠️ Your backlog is large. Consider adjusting daily targets in Settings.
+          <span className="material-symbols-outlined" style={{ color: 'var(--error)', fontSize: 22 }}>warning</span>
+          <div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: 'var(--error)', letterSpacing: '0.06em' }}>
+              CRITICAL DEBT LEVEL
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginTop: 2 }}>
+              Your backlog is large and may affect retention. Consider adjusting daily targets in Settings.
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Total */}
-      <div className="card" style={{ marginBottom: 20, textAlign: 'center' }}>
-        <div style={{ fontSize: 36, fontWeight: 800, color: backlogColor(totalMinutes) }}>
-          {formatMinutes(totalMinutes)}
+      {/* Total accumulated card */}
+      <div className="luminous-card" style={{ padding: '28px 24px', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, padding: 16, opacity: 0.06 }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 100, color: 'var(--error)' }}>history</span>
         </div>
-        <div style={{ fontSize: 13, color: 'var(--color-muted)', marginTop: 4 }}>
-          Total owed across all subjects
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--on-surface-variant)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+          Accumulated Debt
         </div>
-        <div style={{ fontSize: 12, color: 'var(--color-muted)', marginTop: 8 }}>
-          Extra time logged today reduces this automatically
+        <div style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: totalMinutes > 0 ? 52 : 36,
+          fontWeight: 800,
+          color: totalMinutes === 0 ? '#10B981' : backlogColor(totalMinutes),
+          letterSpacing: '-0.02em',
+          lineHeight: 1,
+          marginBottom: 10,
+        }}>
+          {totalMinutes === 0 ? '0 min' : formatMinutes(totalMinutes)}
+        </div>
+        <div style={{ fontSize: 13, color: 'var(--on-surface-variant)' }}>
+          {totalMinutes === 0
+            ? '🎉 All caught up — great work!'
+            : 'Total owed across all subjects in current sprint'}
         </div>
       </div>
 
       {/* Per-subject cards */}
       {isLoading && (
-        <div style={{ color: 'var(--color-muted)', textAlign: 'center', padding: 40 }}>Loading...</div>
+        <div style={{ color: 'var(--on-surface-variant)', textAlign: 'center', padding: 40,
+          fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.08em' }}>
+          LOADING…
+        </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {!isLoading && totalMinutes === 0 ? (
-          <div style={{ color: '#22c55e', textAlign: 'center', padding: '40px 20px', fontSize: 15, fontWeight: 600 }}>
-            You're all caught up 🎉
-          </div>
-        ) : (
-          backlogItems.map(item => {
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }} className="stagger">
+        {!isLoading && backlogItems.map((item, i) => {
           const minutes = parseInt(item.accumulated_minutes);
-          const color = backlogColor(minutes);
+          const { label: sevLabel, color: sevColor } = getSeverity(minutes);
           const isConfirming = confirmClear === item.subject_id;
-
-          let severity = 'No backlog';
-          if (minutes > 0 && minutes < 120) severity = 'Minor (<2h)';
-          else if (minutes >= 120 && minutes < 300) severity = 'Moderate (2–5h)';
-          else if (minutes >= 300) severity = 'High (5h+)';
+          const fillPct = Math.min(100, (minutes / 300) * 100);
 
           return (
             <div
               key={item.subject_id}
-              className="card"
-              style={{ borderLeft: `4px solid ${item.subject_color}` }}
+              className="luminous-card slide-left"
+              style={{
+                borderLeft: `3px solid ${item.subject_color}`,
+                padding: '18px 20px',
+                animationDelay: `${i * 0.07}s`,
+              }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: item.subject_color }} />
-                  <span style={{ fontWeight: 600, fontSize: 15 }}>{item.subject_name}</span>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontWeight: 800, fontSize: 20, color }}>
-                    {formatMinutes(minutes)}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: 'var(--on-surface)', marginBottom: 3 }}>
+                    {item.subject_name}
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--color-muted)' }}>{severity}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: sevColor, letterSpacing: '0.06em' }}>
+                    {sevLabel} PRIORITY
+                  </div>
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: sevColor,
+                  background: `${sevColor}18`,
+                  border: `1px solid ${sevColor}35`,
+                  padding: '3px 10px',
+                  borderRadius: 6,
+                }}>
+                  {minutes === 0 ? '✓ Clear' : formatMinutes(minutes)}
                 </div>
               </div>
 
-              {/* Progress bar showing backlog */}
-              <div className="progress-track" style={{ marginBottom: 12 }}>
-                <div
-                  className="progress-fill"
-                  style={{
-                    width: `${Math.min(100, (minutes / 300) * 100)}%`,
-                    background: color,
-                  }}
-                />
+              {/* Fill bar */}
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--on-surface-variant)', letterSpacing: '0.06em' }}>FILL LEVEL</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--on-surface-variant)' }}>{Math.round(fillPct)}%</span>
+                </div>
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: `${fillPct}%`, background: item.subject_color }} />
+                </div>
               </div>
 
               {/* Actions */}
@@ -118,7 +162,7 @@ export default function Backlog() {
                     <button
                       className="btn btn-ghost"
                       onClick={() => setConfirmClear(null)}
-                      style={{ flex: 1, fontSize: 13 }}
+                      style={{ flex: 1, fontSize: 12 }}
                     >
                       Cancel
                     </button>
@@ -127,25 +171,27 @@ export default function Backlog() {
                       className="btn btn-danger"
                       onClick={() => clearMutation.mutate(item.subject_id)}
                       disabled={clearMutation.isPending}
-                      style={{ flex: 1, fontSize: 13 }}
+                      style={{ flex: 1, fontSize: 12 }}
                     >
-                      {clearMutation.isPending ? 'Clearing...' : 'Yes, Clear'}
+                      <span className="material-symbols-outlined" style={{ fontSize: 16 }}>done_all</span>
+                      {clearMutation.isPending ? 'Clearing…' : 'Confirm Clear'}
                     </button>
                   </div>
                 ) : (
                   <button
                     className="btn btn-ghost"
                     onClick={() => setConfirmClear(item.subject_id)}
-                    style={{ fontSize: 12, padding: '6px 12px', color: '#fca5a5' }}
+                    style={{ fontSize: 12, padding: '7px 16px', width: '100%',
+                      borderColor: 'rgba(188,201,205,0.2)', color: 'var(--on-surface-variant)' }}
                   >
+                    <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_fix_high</span>
                     Clear backlog
                   </button>
                 )
               )}
             </div>
           );
-        })
-      )}
+        })}
       </div>
     </div>
   );
