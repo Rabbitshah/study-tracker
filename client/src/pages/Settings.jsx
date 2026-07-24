@@ -257,6 +257,7 @@ export default function Settings() {
       </div>
 
       {/* Account section */}
+      {/* Commented out Account Section / Sign Out Button
       <div className="luminous-card" style={{ padding: '24px', marginTop: 24 }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--on-surface)', marginBottom: 6 }}>
           Account
@@ -276,6 +277,7 @@ export default function Settings() {
           Sign Out
         </button>
       </div>
+      */}
     </div>
   );
 }

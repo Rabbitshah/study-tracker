@@ -163,4 +163,103 @@ async function getGRE(req, res, next) {
   }
 }
 
-module.exports = { getOverview, getStreak, getWeekly, getGRE };
+// ─── GET /api/progress/vocab ───────────────────────────────────────────────────
+async function getLearnedVocab(req, res, next) {
+  try {
+    const { rows } = await pool.query(
+      `SELECT group_name, word FROM learned_vocab WHERE user_id = $1`,
+      [req.user.id]
+    );
+    const formatted = rows.map(r => `${r.group_name}|${r.word}`);
+    return res.status(200).json(formatted);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ─── POST /api/progress/vocab/toggle ────────────────────────────────────────────
+async function toggleLearnedVocab(req, res, next) {
+  try {
+    const { group_name, word } = req.body;
+    if (!group_name || !word) {
+      return res.status(400).json({ error: 'group_name and word are required' });
+    }
+
+    const { rows } = await pool.query(
+      `SELECT id FROM learned_vocab WHERE user_id = $1 AND group_name = $2 AND word = $3`,
+      [req.user.id, group_name, word]
+    );
+
+    if (rows.length > 0) {
+      await pool.query(
+        `DELETE FROM learned_vocab WHERE user_id = $1 AND group_name = $2 AND word = $3`,
+        [req.user.id, group_name, word]
+      );
+      return res.status(200).json({ learned: false });
+    } else {
+      await pool.query(
+        `INSERT INTO learned_vocab (user_id, group_name, word) VALUES ($1, $2, $3)`,
+        [req.user.id, group_name, word]
+      );
+      return res.status(200).json({ learned: true });
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ─── POST /api/progress/vocab/sync ──────────────────────────────────────────────
+async function syncLearnedVocab(req, res, next) {
+  try {
+    const { words } = req.body;
+    if (!Array.isArray(words)) {
+      return res.status(400).json({ error: 'words must be an array' });
+    }
+
+    for (const item of words) {
+      const parts = item.split('|');
+      if (parts.length === 2) {
+        const [group_name, word] = parts;
+        await pool.query(
+          `INSERT INTO learned_vocab (user_id, group_name, word) 
+           VALUES ($1, $2, $3) 
+           ON CONFLICT (user_id, group_name, word) DO NOTHING`,
+          [req.user.id, group_name, word]
+        );
+      }
+    }
+
+    const { rows } = await pool.query(
+      `SELECT group_name, word FROM learned_vocab WHERE user_id = $1`,
+      [req.user.id]
+    );
+    const formatted = rows.map(r => `${r.group_name}|${r.word}`);
+    return res.status(200).json(formatted);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ─── POST /api/progress/vocab/reset ─────────────────────────────────────────────
+async function resetLearnedVocab(req, res, next) {
+  try {
+    await pool.query(
+      `DELETE FROM learned_vocab WHERE user_id = $1`,
+      [req.user.id]
+    );
+    return res.status(200).json({ status: 'ok' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  getOverview,
+  getStreak,
+  getWeekly,
+  getGRE,
+  getLearnedVocab,
+  toggleLearnedVocab,
+  syncLearnedVocab,
+  resetLearnedVocab
+};

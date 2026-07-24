@@ -85,9 +85,22 @@ CREATE TABLE IF NOT EXISTS course_progress (
 );
 
 -- ─────────────────────────────────────────
+-- LEARNED GRE VOCABULARY
+-- ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS learned_vocab (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES users(id) ON DELETE CASCADE,
+  group_name  VARCHAR(50) NOT NULL,
+  word        VARCHAR(100) NOT NULL,
+  created_at  TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, group_name, word)
+);
+
+-- ─────────────────────────────────────────
 -- INDEXES
 -- ─────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_daily_logs_user_date  ON daily_logs(user_id, log_date);
 CREATE INDEX IF NOT EXISTS idx_backlog_user          ON backlog(user_id);
 CREATE INDEX IF NOT EXISTS idx_course_progress_user  ON course_progress(user_id);
 CREATE INDEX IF NOT EXISTS idx_subjects_user         ON subjects(user_id);
+CREATE INDEX IF NOT EXISTS idx_learned_vocab_user    ON learned_vocab(user_id);

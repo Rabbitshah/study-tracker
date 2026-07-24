@@ -8,8 +8,10 @@ import api from '../services/api';
  */
 export function useAuth() {
   const { user, isAuthenticated, login, logout } = useAppStore();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
+  // Comment out session restoration and verification check
+  /*
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
@@ -32,6 +34,7 @@ export function useAuth() {
         setLoading(false);
       });
   }, []);
+  */
 
   return { user, isAuthenticated, loading, login, logout };
 }

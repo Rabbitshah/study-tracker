@@ -83,6 +83,7 @@ export default function NavBar() {
         </nav>
 
         {/* ── Sign Out ──────────────────────────────────────────── */}
+        {/* Commented out logout button from NavBar
         <div style={{ padding: '16px 24px 0', borderTop: '1px solid rgba(61,73,76,0.3)' }}>
           <button
             onClick={handleLogout}
@@ -109,6 +110,7 @@ export default function NavBar() {
             Sign Out
           </button>
         </div>
+        */}
       </aside>
 
       {/* ─── Mobile Bottom Nav ─────────────────────────────────── */}

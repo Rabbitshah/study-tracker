@@ -203,9 +203,9 @@ export default function Courses() {
         </div>
       )}
 
-      {data && (
+       {data && (
         <>
-          <CertSection title="Meta Android Developer" cert={data.meta_android} accentColor="var(--tertiary)" icon="android" />
+          {/* <CertSection title="Meta Android Developer" cert={data.meta_android} accentColor="var(--tertiary)" icon="android" /> */}
           <CertSection title="Unity Game Design"       cert={data.unity}        accentColor="var(--success)"  icon="sports_esports" />
         </>
       )}

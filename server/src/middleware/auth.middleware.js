@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
  * Attaches req.user = { id, email } on success.
  */
 function authMiddleware(req, res, next) {
+  // Bypass JWT verification: Comment out auth check and hardcode user
+  /*
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -23,6 +25,10 @@ function authMiddleware(req, res, next) {
     }
     return res.status(401).json({ error: 'Invalid token', status: 401 });
   }
+  */
+
+  req.user = { id: 'd89fc05c-07f3-4058-a299-9074917379c8', email: 'maanavshah09@gmail.com' };
+  next();
 }
 
 module.exports = authMiddleware;

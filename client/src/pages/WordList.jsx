@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { greVocabData } from '../utils/greVocabData';
+import api from '../services/api';
 
 export default function WordList() {
   const [q, setQ] = useState('');
@@ -26,21 +27,72 @@ export default function WordList() {
   const GROUPS = Object.keys(greVocabData);
   const TOTAL_WORDS = Object.values(greVocabData).reduce((sum, arr) => sum + arr.length, 0);
 
-  const saveLearned = (newSet) => {
-    localStorage.setItem('gre_learned', JSON.stringify([...newSet]));
-    setLearnedSet(new Set(newSet));
-  };
+  // On mount, sync localStorage with database
+  useEffect(() => {
+    const localWords = (() => {
+      try {
+        const stored = localStorage.getItem('gre_learned');
+        return JSON.parse(stored || '[]');
+      } catch {
+        return [];
+      }
+    })();
 
-  const toggleLearned = (id) => {
+    api.post('/progress/vocab/sync', { words: localWords })
+      .then(res => {
+        const backendWords = res.data;
+        setLearnedSet(new Set(backendWords));
+        localStorage.setItem('gre_learned', JSON.stringify(backendWords));
+      })
+      .catch(err => {
+        console.error('Failed to sync vocab cards with backend:', err);
+      });
+  }, []);
+
+  const toggleLearned = async (id) => {
+    const parts = id.split('|');
+    if (parts.length !== 2) return;
+    const [group_name, word] = parts;
+
+    // Optimistically update UI state
     const next = new Set(learnedSet);
-    if (next.has(id)) next.delete(id);
+    const wasLearned = next.has(id);
+    if (wasLearned) next.delete(id);
     else next.add(id);
-    saveLearned(next);
+
+    setLearnedSet(next);
+    localStorage.setItem('gre_learned', JSON.stringify([...next]));
+
+    try {
+      await api.post('/progress/vocab/toggle', { group_name, word });
+    } catch (err) {
+      console.error('Failed to toggle learned word:', err);
+      // Revert on error
+      const revert = new Set(learnedSet);
+      if (wasLearned) revert.add(id);
+      else revert.delete(id);
+      setLearnedSet(revert);
+      localStorage.setItem('gre_learned', JSON.stringify([...revert]));
+    }
   };
 
-  const resetLearned = () => {
+  const resetLearned = async () => {
     if (!window.confirm('Reset all learned marks?')) return;
-    saveLearned(new Set());
+
+    const prev = new Set(learnedSet);
+
+    // Optimistically clear
+    setLearnedSet(new Set());
+    localStorage.setItem('gre_learned', JSON.stringify([]));
+
+    try {
+      await api.post('/progress/vocab/reset');
+    } catch (err) {
+      console.error('Failed to reset learned words:', err);
+      // Revert on error
+      setLearnedSet(prev);
+      localStorage.setItem('gre_learned', JSON.stringify([...prev]));
+    }
   };
 
   // Build flat ordered list of card IDs from currently filtered data
